@@ -1,0 +1,19 @@
+{
+  "common": {
+    "confirm": "确定",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "loading": "加载中..."
+  },
+  "update": {
+    "checkUpdate": "检查更新",
+    "checking": "检查中...",
+    "newVersion": "最新版本: v{{version}}",
+    "downloadError": "下载最新版本出错",
+    "updateProgress": "更新进度:",
+    "installNow": "立即安装",
+    "later": "稍后"
+  }
+}

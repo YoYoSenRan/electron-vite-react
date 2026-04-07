@@ -15,3 +15,21 @@
 - 动词开头（`checkUpdate` / `downloadFile`）
 - 禁用万金油动词（`handle` / `process` / `do`）
 - 一个函数只做一件事，函数名要能完整描述这件事
+
+## React 组件文件
+
+- **文件名**：小写 + 单词（不用 PascalCase 或 kebab-case）
+  - ✅ `titlebar.tsx` `theme.tsx` `modal.tsx`
+  - ❌ `TitleBar.tsx` `title-bar.tsx` `Modal/index.tsx`
+- **目录名**：小写 + 单词
+  - ✅ `update/` `layout/` `providers/`
+  - ❌ `Update/` `update-modal/`
+- **组件本身**：仍然 PascalCase（React 要求）
+  - ✅ `export function TitleBar() { ... }`
+- **样式文件**：与组件同名 + `.css`
+  - ✅ `modal.tsx` + `modal.css`
+- **同 feature 内 sibling 引用用相对路径**，跨 feature 用 `@/` 别名
+  - ✅ `import Modal from "./modal"`（同目录）
+  - ✅ `import { TitleBar } from "@/components/layout/titlebar"`（跨目录）
+
+⚠️ `src/components/ui/` 是 shadcn CLI 生成的，**不在此规则范围内**，保持工具默认（kebab-case）。

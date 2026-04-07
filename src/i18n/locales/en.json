@@ -1,0 +1,19 @@
+{
+  "common": {
+    "confirm": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading..."
+  },
+  "update": {
+    "checkUpdate": "Check update",
+    "checking": "Checking...",
+    "newVersion": "The latest version is: v{{version}}",
+    "downloadError": "Error downloading the latest version",
+    "updateProgress": "Update progress:",
+    "installNow": "Install now",
+    "later": "Later"
+  }
+}

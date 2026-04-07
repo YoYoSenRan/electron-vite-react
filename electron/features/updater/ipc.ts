@@ -1,13 +1,13 @@
 import { ipcMain } from "electron"
 import { updaterChannels } from "./channels"
-import { checkForUpdate, quitAndInstall, setupAutoUpdater, startDownload } from "./service"
+import { bindAutoUpdaterEvents, checkForUpdate, quitAndInstall, startDownload } from "./service"
 
 /**
  * 注册 updater feature 的所有 IPC handler 并初始化 autoUpdater 事件。
  * 必须在 app.whenReady() 之后调用。
  */
-export function registerUpdaterIpc(): void {
-  setupAutoUpdater()
+export function setupUpdater(): void {
+  bindAutoUpdaterEvents()
 
   ipcMain.handle(updaterChannels.check, () => checkForUpdate())
   ipcMain.handle(updaterChannels.startDownload, () => startDownload())

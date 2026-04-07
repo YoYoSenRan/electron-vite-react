@@ -12,7 +12,7 @@ let pendingUrl: string | null = null
  * 注册自定义协议为默认处理程序。
  * 必须在 app.whenReady() 之前调用。
  */
-export function registerProtocol(): void {
+export function setupProtocol(): void {
   if (!app.isPackaged) {
     // 开发环境必须显式指定可执行文件和启动参数，否则会指向不存在的打包路径
     app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, [path.resolve(process.argv[1])])

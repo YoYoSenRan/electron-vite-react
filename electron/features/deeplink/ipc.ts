@@ -7,7 +7,7 @@ import { extractDeepLinkFromArgv, handleDeepLink } from "./service"
  * 没有 ipcMain.handle，只有 app 事件 —— 因为深度链接是 OS → 应用的方向。
  * 必须在 app.whenReady() 之前调用，因为 macOS 冷启动的 open-url 会在 ready 之前触发。
  */
-export function registerDeeplinkListeners(): void {
+export function setupDeeplinkListeners(): void {
   // macOS: 点击深度链接或应用被协议冷启动时触发
   app.on("open-url", (event, url) => {
     event.preventDefault()

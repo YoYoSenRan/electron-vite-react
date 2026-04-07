@@ -25,8 +25,3 @@ export const PRELOAD_PATH = path.join(MAIN_DIST, "preload/preload.mjs")
 
 /** 渲染进程首页入口 */
 export const INDEX_HTML = path.join(RENDERER_DIST, "index.html")
-
-// 把 APP_ROOT 和 VITE_PUBLIC 写回 process.env 供其他模块读取
-// 保留历史兼容性（electron-env.d.ts 里声明了这两个环境变量）
-process.env.APP_ROOT = APP_ROOT
-process.env.VITE_PUBLIC = VITE_PUBLIC

@@ -25,7 +25,7 @@ export function requestSingleInstance(): boolean {
 /**
  * 注册应用级生命周期事件：窗口全部关闭和 macOS dock 激活。
  */
-export function registerAppLifecycle(): void {
+export function setupAppLifecycle(): void {
   app.on("window-all-closed", () => {
     clearMainWindow()
     // 所有平台统一行为：关闭窗口即退出应用

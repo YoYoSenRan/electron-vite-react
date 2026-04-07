@@ -7,7 +7,7 @@ import { INDEX_HTML, PRELOAD_PATH, VITE_DEV_SERVER_URL } from "../../core/paths"
  * 注册 window feature 的所有 IPC handler 和主窗口事件。
  * 必须在 app.whenReady() 之后 **且主窗口已创建** 之后调用。
  */
-export function registerWindowIpc(): void {
+export function setupWindow(): void {
   registerHandlers()
   bindMaximizeEvents()
 }

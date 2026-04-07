@@ -16,7 +16,7 @@ let eventsBound = false
  * 绑定 autoUpdater 的所有事件到主窗口推送。
  * 幂等：重复调用只生效一次，避免多次注册同一事件导致重复推送。
  */
-export function setupAutoUpdater(): void {
+export function bindAutoUpdaterEvents(): void {
   if (eventsBound) return
   eventsBound = true
 

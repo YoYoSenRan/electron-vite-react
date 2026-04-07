@@ -9,14 +9,13 @@
 ```ts
 // ✅ 正确
 import "./core/logger"              // side-effect，必须最先
-import "./core/paths"               // side-effect
 import { app } from "electron"
+import { setupLog } from "./features/log/ipc"
 import { setupCSP } from "./core/security"
-import { registerLogIpc } from "./features/log"
+import { setupWindow } from "./features/window/ipc"
+import { setupUpdater } from "./features/updater/ipc"
 import { createMainWindow } from "./core/window"
-import { registerWindowIpc } from "./features/window"
-import { registerUpdaterIpc } from "./features/updater"
-import { prepareApp, registerAppLifecycle, requestSingleInstance } from "./core/app"
+import { prepareApp, setupAppLifecycle, requestSingleInstance } from "./core/app"
 
 // ❌ 错误：分组 + 字母序
 import { app } from "electron"
@@ -25,16 +24,8 @@ import { createMainWindow } from "./core/window"
 import { setupCSP } from "./core/security"
 ```
 
-## Export（barrel index.ts）
+> feature 必须**直接 import 具体文件**（`./features/window/ipc` 或 `./features/window/bridge`），**不要**走 barrel `./features/window`。详见 `ipc.md` 的"禁止 barrel"小节。
 
-同样按**行长度升序**排序：
-
-```ts
-// ✅ 正确
-export { logBridge } from "./bridge"
-export { registerLogIpc } from "./ipc"
-export type { LogBridge } from "./types"
-```
 
 ## 类型描述同文件实现时前置
 

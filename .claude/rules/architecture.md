@@ -6,7 +6,7 @@
 electron/
 ├── main.ts                 # 主进程入口，只做装配
 ├── preload.ts              # 预加载入口，聚合 feature bridge
-├── electron-env.d.ts       # 全局类型声明
+├── env.d.ts                # main 进程环境变量声明
 ├── core/                   # 全局基础设施（不属于任何业务）
 └── features/               # 业务功能切片，每个功能一个目录
 ```
@@ -37,8 +37,8 @@ electron/
 
 ## 装配方式
 
-- feature 通过 `register<Name>Ipc()` 函数自注册
-- `main.ts` 在 `app.whenReady` 之后统一调用所有 `register*Ipc()`
+- feature 通过 `setup<Name>()` 函数自注册
+- `main.ts` 在 `app.whenReady` 之后统一调用所有 `setup*()`
 - `preload.ts` 聚合各 feature 的 bridge 成 `const api`
 - 通过 `contextBridge.exposeInMainWorld("api", api)` 暴露
 - renderer 统一通过 `window.api.<feature>.<method>` 调用
@@ -47,17 +47,17 @@ electron/
 
 ```ts
 prepareApp()                    // 同步准备：禁用 GPU / setAppUserModelId
-registerProtocol()              // 自定义协议必须在 singleInstanceLock 之前
-registerDeeplinkListeners()     // open-url 必须在 whenReady 之前
+setupProtocol()                 // 自定义协议必须在 singleInstanceLock 之前
+setupDeeplinkListeners()        // open-url 必须在 whenReady 之前
 if (!requestSingleInstance()) app.quit()
-registerAppLifecycle()          // window-all-closed / activate
+setupAppLifecycle()             // window-all-closed / activate
 
 app.whenReady().then(() => {
   setupCSP()                    // CSP 必须在创建窗口前
   createMainWindow()            // 先建窗口
-  registerWindowIpc()           // 后注册 IPC（部分 IPC 需要绑定窗口事件）
-  registerUpdaterIpc()
-  registerLogIpc()
+  setupWindow()                 // 后注册 IPC（部分 IPC 需要绑定窗口事件）
+  setupUpdater()
+  setupLog()
   flushPendingDeepLink()        // 处理冷启动暂存的 URL
 })
 ```

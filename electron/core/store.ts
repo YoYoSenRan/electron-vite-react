@@ -1,6 +1,7 @@
 import Store from "electron-store"
 
-interface StoreSchema {
+/** 持久化数据 schema */
+export interface StoreSchema {
   windowBounds: {
     x?: number
     y?: number

@@ -7,7 +7,6 @@ import App from "./App"
 import "./i18n"
 import "./styles/globals.css"
 
-import "./demos/ipc"
 // 如需使用 Node.js，需要在主进程中启用 nodeIntegration
 // import './demos/node'
 

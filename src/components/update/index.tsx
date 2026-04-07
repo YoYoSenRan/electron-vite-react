@@ -18,34 +18,33 @@ const Update = () => {
     onOk?: () => void
   }>({
     onCancel: () => setModalOpen(false),
-    onOk: () => window.ipcRenderer.invoke("start-download"),
+    onOk: () => window.api.updater.startDownload(),
   })
 
   const checkUpdate = async () => {
     setChecking(true)
-    /**
-     * @type {import('electron-updater').UpdateCheckResult | null | { message: string, error: Error }}
-     */
-    const result = await window.ipcRenderer.invoke("check-update")
+    const result = await window.api.updater.check()
     setProgressInfo({ percent: 0 })
     setChecking(false)
     setModalOpen(true)
-    if (result?.error) {
+    // check() 失败时返回 { message, error } 错误对象，成功时返回 null
+    // （成功时的可用性结果通过 onCanAvailable 事件推送）
+    if (result) {
       setUpdateAvailable(false)
-      setUpdateError(result?.error)
+      setUpdateError(result)
     }
   }
 
-  const onUpdateCanAvailable = useCallback((_event: Electron.IpcRendererEvent, arg1: VersionInfo) => {
-    setVersionInfo(arg1)
+  const onUpdateCanAvailable = useCallback((info: VersionInfo) => {
+    setVersionInfo(info)
     setUpdateError(undefined)
-    // 有可用更新
-    if (arg1.update) {
+    // 有可用更新时切换按钮文案
+    if (info.update) {
       setModalBtn((state) => ({
         ...state,
         cancelText: "Cancel",
         okText: "Update",
-        onOk: () => window.ipcRenderer.invoke("start-download"),
+        onOk: () => window.api.updater.startDownload(),
       }))
       setUpdateAvailable(true)
     } else {
@@ -53,37 +52,36 @@ const Update = () => {
     }
   }, [])
 
-  const onUpdateError = useCallback((_event: Electron.IpcRendererEvent, arg1: ErrorType) => {
+  const onUpdateError = useCallback((info: ErrorType) => {
     setUpdateAvailable(false)
-    setUpdateError(arg1)
+    setUpdateError(info)
   }, [])
 
-  const onDownloadProgress = useCallback((_event: Electron.IpcRendererEvent, arg1: ProgressInfo) => {
-    setProgressInfo(arg1)
+  const onDownloadProgress = useCallback((info: ProgressInfo) => {
+    setProgressInfo(info)
   }, [])
 
-  const onUpdateDownloaded = useCallback((_event: Electron.IpcRendererEvent) => {
+  const onUpdateDownloaded = useCallback(() => {
     setProgressInfo({ percent: 100 })
     setModalBtn((state) => ({
       ...state,
       cancelText: "Later",
       okText: "Install now",
-      onOk: () => window.ipcRenderer.invoke("quit-and-install"),
+      onOk: () => window.api.updater.quitAndInstall(),
     }))
   }, [])
 
   useEffect(() => {
-    // 监听版本信息和更新事件
-    window.ipcRenderer.on("update-can-available", onUpdateCanAvailable)
-    window.ipcRenderer.on("update-error", onUpdateError)
-    window.ipcRenderer.on("download-progress", onDownloadProgress)
-    window.ipcRenderer.on("update-downloaded", onUpdateDownloaded)
+    // 每个订阅都返回取消函数，组件卸载时统一清理
+    const unsubscribers = [
+      window.api.updater.onCanAvailable(onUpdateCanAvailable),
+      window.api.updater.onError(onUpdateError),
+      window.api.updater.onDownloadProgress(onDownloadProgress),
+      window.api.updater.onDownloaded(onUpdateDownloaded),
+    ]
 
     return () => {
-      window.ipcRenderer.off("update-can-available", onUpdateCanAvailable)
-      window.ipcRenderer.off("update-error", onUpdateError)
-      window.ipcRenderer.off("download-progress", onDownloadProgress)
-      window.ipcRenderer.off("update-downloaded", onUpdateDownloaded)
+      unsubscribers.forEach((off) => off())
     }
   }, [onUpdateCanAvailable, onUpdateError, onDownloadProgress, onUpdateDownloaded])
 

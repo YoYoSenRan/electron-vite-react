@@ -9,6 +9,9 @@
 | 常量 | UPPER_SNAKE_CASE | `CHECK_INTERVAL_MS` |
 | Boolean | is/has/can/should 前缀 | `isDev` `hasUpdate` `canQuit` |
 | 私有函数 | 不导出即可，无需 `_` 前缀 | — |
+| Hook 文件 | `use-` 前缀 + kebab-case | `use-theme-effect.ts` `use-now.ts` |
+
+> Hook 文件名是"小写单词"规则的**唯一例外**：React 社区惯例 `use-` 前缀必须保留，多单词时用连字符。Hook 函数本身仍然 camelCase（`useThemeEffect`）。
 
 ## 函数命名约束
 

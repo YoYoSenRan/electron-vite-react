@@ -1,3 +1,11 @@
+---
+paths:
+  - "app/stores/**"
+  - "app/**/*.tsx"
+  - "electron/core/store.ts"
+  - "electron/features/store/**"
+---
+
 # 本地持久化规范
 
 项目有两套持久化方案，**必须按数据属性选对**，禁止混用或散落在组件里。

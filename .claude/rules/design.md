@@ -1,7 +1,7 @@
 ---
 paths:
-  - "src/**/*.tsx"
-  - "src/**/*.css"
+  - "app/**/*.tsx"
+  - "app/**/*.css"
 ---
 
 # UI 设计语言：Operations Deck
@@ -25,7 +25,7 @@ paths:
 | Sans body | Roboto Variable | `font-sans`（默认） |
 | Mono data | 系统等宽栈 | `font-mono` |
 
-CSS 变量定义在 `src/styles/globals.css`：
+CSS 变量定义在 `app/styles/globals.css`：
 
 ```css
 --font-sans: "Roboto Variable", sans-serif;
@@ -47,7 +47,7 @@ CSS 变量定义在 `src/styles/globals.css`：
 
 ### 单一强调色（自定义）
 
-定义在 `src/App.css` 的 `--deck-accent`，深浅模式各调一档亮度：
+定义在 `app/App.css` 的 `--deck-accent`，深浅模式各调一档亮度：
 
 ```css
 :root  { --deck-accent: oklch(0.7 0.16 55); }
@@ -99,7 +99,7 @@ CSS 变量定义在 `src/styles/globals.css`：
 
 ## 动画系统
 
-定义在 `src/App.css`：
+定义在 `app/App.css`：
 
 | Class | 用途 | 配置 |
 |---|---|---|
@@ -200,7 +200,7 @@ CSS 变量定义在 `src/styles/globals.css`：
 
 **不翻译**：标识符 / 代码（service 名、event type、status 代码、版本号、时间戳）—— 中文环境下保持英文反而更专业
 
-实现：`useTranslation()` + `t("deck.xxx")`，翻译键定义在 `src/i18n/locales/{en,zh-CN}.json`。
+实现：`useTranslation()` + `t("deck.xxx")`，翻译键定义在 `app/i18n/locales/{en,zh-CN}.json`。
 
 ## 反模式（一律禁用）
 
@@ -231,7 +231,7 @@ CSS 变量定义在 `src/styles/globals.css`：
 
 ## 当前可用的自定义 utility class
 
-定义在 `src/App.css`：
+定义在 `app/App.css`：
 
 | Class | 作用 |
 |---|---|
@@ -246,7 +246,7 @@ CSS 变量定义在 `src/styles/globals.css`：
 
 ## 当前参考实现
 
-完整应用此设计语言的页面：`src/App.tsx`
+完整应用此设计语言的页面：`app/App.tsx`
 
 新建页面 / 组件时，参考它的：
 - Header 结构（左 brand + 右 meta + 控件）

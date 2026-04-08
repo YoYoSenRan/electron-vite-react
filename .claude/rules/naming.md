@@ -32,4 +32,4 @@
   - ✅ `import Modal from "./modal"`（同目录）
   - ✅ `import { TitleBar } from "@/components/layout/titlebar"`（跨目录）
 
-⚠️ `src/components/ui/` 是 shadcn CLI 生成的，**不在此规则范围内**，保持工具默认（kebab-case）。
+⚠️ `app/components/ui/` 是 shadcn CLI 生成的，**不在此规则范围内**，保持工具默认（kebab-case）。

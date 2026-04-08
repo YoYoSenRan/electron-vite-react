@@ -39,7 +39,7 @@ pnpm build
 ├── electron/                Electron 主进程 & 预加载脚本
 │   ├── main/                主进程 (入口、自动更新、持久化存储)
 │   └── preload/             预加载脚本 (IPC 桥接)
-├── src/                     渲染进程 (React 应用)
+├── app/                     渲染进程 (React 应用)
 │   ├── components/          组件 (ui/、theme-provider、update)
 │   ├── i18n/                国际化配置与翻译文件
 │   ├── lib/                 工具函数

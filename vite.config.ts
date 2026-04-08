@@ -18,14 +18,14 @@ export default defineConfig(({ command }) => {
   return {
     resolve: {
       alias: {
-        "@": path.join(__dirname, "src"),
+        "@": path.join(__dirname, "app"),
       },
     },
     plugins: [
       tailwindcss(),
       AutoImport({
         imports: ["react", "react-router"],
-        dts: "src/types/auto-imports.d.ts",
+        dts: "app/types/auto-imports.d.ts",
       }),
       react(),
       electron({

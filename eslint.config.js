@@ -18,10 +18,10 @@ export default tseslint.config(
     },
   },
 
-  // src/ 目录：追加 React 相关规则
+  // app/ 目录：追加 React 相关规则
   {
-    files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/components/ui/**"],
+    files: ["app/**/*.{ts,tsx}"],
+    ignores: ["app/components/ui/**"],
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Activity, ChevronRight, Cpu, GitBranch, Languages, Layers, Monitor, Moon, Radio, Shield, Sun, Zap, ArrowUpRight } from "lucide-react"
+import { useSettingsStore } from "@/stores/settings"
 import { TitleBar } from "@/components/layout/titlebar"
-import { useTheme } from "@/components/providers/theme"
+import { useThemeEffect } from "@/hooks/use-theme-effect"
+import { Activity, ChevronRight, Cpu, GitBranch, Languages, Layers, Monitor, Moon, Radio, Shield, Sun, Zap, ArrowUpRight } from "lucide-react"
 import "./App.css"
 
 // ============ 静态数据（业务标识不翻译） ============
@@ -65,7 +66,8 @@ function formatDate(date: Date) {
  * 主题切换按钮：循环 light → dark → system → light，图标随当前主题变化
  */
 function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const theme = useSettingsStore((s) => s.theme)
+  const setTheme = useSettingsStore((s) => s.setTheme)
   const { t } = useTranslation()
 
   const next = theme === "light" ? "dark" : theme === "dark" ? "system" : "light"
@@ -88,17 +90,24 @@ function ThemeToggle() {
  */
 function LangToggle() {
   const { i18n, t } = useTranslation()
+  const setLang = useSettingsStore((s) => s.setLang)
   const isZh = i18n.language.startsWith("zh")
+
+  const toggle = () => {
+    const next = isZh ? "en" : "zh-CN"
+    i18n.changeLanguage(next)
+    setLang(next)
+  }
 
   return (
     <button
-      onClick={() => i18n.changeLanguage(isZh ? "en" : "zh-CN")}
+      onClick={toggle}
       title={t("deck.controls.language")}
       aria-label={t("deck.controls.language")}
       className="flex items-center gap-1.5 h-7 px-2.5 border border-border text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
     >
       <Languages className="size-3" strokeWidth={1.5} />
-      <span className="text-[10px] tracking-[0.15em] font-mono uppercase">{isZh ? "EN" : "中"}</span>
+      <span className="text-xs tracking-[0.15em] font-mono uppercase">{isZh ? "EN" : "中"}</span>
     </button>
   )
 }
@@ -111,14 +120,14 @@ function StatCard({ stat, index }: { stat: (typeof STATS)[number]; index: number
   return (
     <div className="group relative bg-background p-6 deck-rise transition-colors hover:bg-accent/30" style={{ animationDelay: `${280 + index * 70}ms` }}>
       <div className="flex items-center justify-between">
-        <span className="text-[10px] tracking-[0.3em] text-muted-foreground uppercase">{t(`deck.metrics.${stat.key}`)}</span>
+        <span className="text-xs tracking-[0.3em] text-muted-foreground uppercase">{t(`deck.metrics.${stat.key}`)}</span>
         <Icon className="size-3.5 text-muted-foreground transition-colors group-hover:deck-accent" strokeWidth={1.5} />
       </div>
       <div className="mt-5 flex items-baseline gap-1.5 tabular">
         <span className="text-4xl font-light tracking-tight">{stat.value}</span>
-        <span className="text-xs text-muted-foreground font-mono">{stat.suffix}</span>
+        <span className="text-sm text-muted-foreground font-mono">{stat.suffix}</span>
       </div>
-      <div className="mt-3 flex items-center gap-1 text-[11px] font-mono">
+      <div className="mt-3 flex items-center gap-1 text-xs font-mono">
         <ArrowUpRight className="size-3 deck-accent" strokeWidth={2} />
         <span className="deck-accent">{stat.trend}</span>
         <span className="text-muted-foreground">{t("deck.metrics.vs7d")}</span>
@@ -131,10 +140,10 @@ function ActivityRow({ activity, index }: { activity: (typeof ACTIVITIES)[number
   const { t } = useTranslation()
   return (
     <div className="group flex items-start gap-4 py-3 border-b border-border/50 last:border-b-0 deck-rise" style={{ animationDelay: `${600 + index * 50}ms` }}>
-      <span className="text-[11px] font-mono text-muted-foreground tabular pt-0.5 w-[68px] shrink-0">{activity.time}</span>
-      <span className="text-[10px] font-mono tracking-wider deck-accent w-[64px] shrink-0 pt-1">{activity.type}</span>
-      <p className="flex-1 text-xs text-foreground/80 leading-relaxed">{t(`deck.activity.messages.${activity.key}`)}</p>
-      <span className="text-[10px] font-mono text-muted-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity pt-1">{activity.id}</span>
+      <span className="text-xs font-mono text-muted-foreground tabular pt-0.5 w-[68px] shrink-0">{activity.time}</span>
+      <span className="text-xs font-mono tracking-wider deck-accent w-[64px] shrink-0 pt-1">{activity.type}</span>
+      <p className="flex-1 text-sm text-foreground/80 leading-relaxed">{t(`deck.activity.messages.${activity.key}`)}</p>
+      <span className="text-xs font-mono text-muted-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity pt-1">{activity.id}</span>
     </div>
   )
 }
@@ -144,13 +153,13 @@ function ServiceRow({ service, index }: { service: (typeof SERVICES)[number]; in
   return (
     <div className="flex items-center gap-3 py-3 border-b border-border/50 last:border-b-0 deck-rise" style={{ animationDelay: `${700 + index * 60}ms` }}>
       <span className={`size-1.5 rounded-full ${isHealthy ? "bg-foreground/70 deck-pulse" : "deck-accent-bg"}`} />
-      <span className="text-xs font-mono w-16">{service.name}</span>
+      <span className="text-sm font-mono w-16">{service.name}</span>
       <div className="flex-1 h-px bg-border relative overflow-hidden">
         <div className={`h-full ${isHealthy ? "bg-foreground/40" : "deck-accent-bg"}`} style={{ width: `${service.load}%` }} />
       </div>
-      <span className="text-[10px] font-mono text-muted-foreground tabular w-10 text-right">{service.load}%</span>
-      <span className="text-[10px] font-mono text-muted-foreground tabular w-12 text-right">{service.latency}ms</span>
-      <span className={`text-[9px] font-mono tracking-wider w-20 text-right ${isHealthy ? "text-muted-foreground" : "deck-accent"}`}>{service.status}</span>
+      <span className="text-xs font-mono text-muted-foreground tabular w-10 text-right">{service.load}%</span>
+      <span className="text-xs font-mono text-muted-foreground tabular w-12 text-right">{service.latency}ms</span>
+      <span className={`text-[10px] font-mono tracking-wider w-20 text-right ${isHealthy ? "text-muted-foreground" : "deck-accent"}`}>{service.status}</span>
     </div>
   )
 }
@@ -158,6 +167,7 @@ function ServiceRow({ service, index }: { service: (typeof SERVICES)[number]; in
 // ============ 主组件 ============
 
 function App() {
+  useThemeEffect()
   const now = useNow()
   const { t } = useTranslation()
 
@@ -171,11 +181,11 @@ function App() {
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
               <div className="size-2 deck-accent-bg deck-pulse rounded-full" />
-              <span className="text-[11px] tracking-[0.4em] font-medium">MERIDIAN</span>
+              <span className="text-xs tracking-[0.4em] font-medium">MERIDIAN</span>
             </div>
-            <span className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase">{t("deck.subtitle")}</span>
+            <span className="text-xs text-muted-foreground tracking-[0.2em] uppercase">{t("deck.subtitle")}</span>
           </div>
-          <div className="flex items-center gap-4 text-[10px] font-mono text-muted-foreground tabular">
+          <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground tabular">
             <span>{formatDate(now)}</span>
             <span className="text-foreground">{formatUTC(now)} UTC</span>
             <span>v0.1.0</span>
@@ -192,27 +202,27 @@ function App() {
           <section className="grid grid-cols-12 gap-12 items-end pb-16 border-b border-border">
             {/* 左：超大数字 */}
             <div className="col-span-7 deck-rise">
-              <p className="text-[10px] tracking-[0.35em] text-muted-foreground uppercase">{t("deck.hero.label")}</p>
+              <p className="text-xs tracking-[0.35em] text-muted-foreground uppercase">{t("deck.hero.label")}</p>
               <p className="mt-4 text-[180px] leading-[0.85] font-extralight tracking-[-0.05em] tabular">14</p>
               <p className="mt-6 text-sm text-muted-foreground max-w-md leading-relaxed">
                 {t("deck.hero.description")}{" "}
                 <span className="deck-accent cursor-pointer hover:underline underline-offset-4">{t("deck.hero.inspect")}</span>
               </p>
-              <div className="mt-8 flex gap-8 text-xs">
+              <div className="mt-8 flex gap-8 text-sm">
                 <div>
-                  <p className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.new")}</p>
+                  <p className="text-xs text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.new")}</p>
                   <p className="font-mono mt-1.5 text-base tabular">03</p>
                 </div>
                 <div className="border-l border-border pl-8">
-                  <p className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.pending")}</p>
+                  <p className="text-xs text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.pending")}</p>
                   <p className="font-mono mt-1.5 text-base tabular deck-accent">02</p>
                 </div>
                 <div className="border-l border-border pl-8">
-                  <p className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.archived")}</p>
+                  <p className="text-xs text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.archived")}</p>
                   <p className="font-mono mt-1.5 text-base tabular">09</p>
                 </div>
                 <div className="border-l border-border pl-8">
-                  <p className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.today")}</p>
+                  <p className="text-xs text-muted-foreground tracking-[0.2em] uppercase">{t("deck.hero.today")}</p>
                   <p className="font-mono mt-1.5 text-base tabular">14</p>
                 </div>
               </div>
@@ -223,12 +233,12 @@ function App() {
               <div className="border-l-2 deck-accent-border pl-6 space-y-4">
                 {META_KEYS.map((key) => (
                   <div key={key} className="flex items-baseline justify-between gap-4 border-b border-border/50 pb-3 last:border-b-0">
-                    <span className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase shrink-0">{t(`deck.meta.${key}`)}</span>
+                    <span className="text-xs text-muted-foreground tracking-[0.2em] uppercase shrink-0">{t(`deck.meta.${key}`)}</span>
                     <span className="text-sm font-mono text-foreground">{META_VALUES[key]}</span>
                   </div>
                 ))}
                 <div className="pt-2">
-                  <button className="group flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase deck-accent hover:gap-3 transition-all">
+                  <button className="group flex items-center gap-2 text-xs tracking-[0.2em] uppercase deck-accent hover:gap-3 transition-all">
                     {t("deck.meta.openConsole")}
                     <ChevronRight className="size-3" strokeWidth={2} />
                   </button>
@@ -242,9 +252,9 @@ function App() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <Cpu className="size-3.5 text-muted-foreground" strokeWidth={1.5} />
-                <h2 className="text-[10px] tracking-[0.3em] text-muted-foreground uppercase">{t("deck.metrics.title")}</h2>
+                <h2 className="text-xs tracking-[0.3em] text-muted-foreground uppercase">{t("deck.metrics.title")}</h2>
               </div>
-              <span className="text-[10px] tracking-[0.2em] text-muted-foreground font-mono uppercase">{t("deck.metrics.live")}</span>
+              <span className="text-xs tracking-[0.2em] text-muted-foreground font-mono uppercase">{t("deck.metrics.live")}</span>
             </div>
             <div className="grid grid-cols-4 gap-px deck-grid-bg border deck-grid-bg">
               {STATS.map((stat, i) => (
@@ -260,9 +270,9 @@ function App() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <Layers className="size-3.5 text-muted-foreground" strokeWidth={1.5} />
-                  <h2 className="text-[10px] tracking-[0.3em] text-muted-foreground uppercase">{t("deck.activity.title")}</h2>
+                  <h2 className="text-xs tracking-[0.3em] text-muted-foreground uppercase">{t("deck.activity.title")}</h2>
                 </div>
-                <button className="text-[10px] tracking-[0.2em] text-muted-foreground hover:deck-accent transition-colors uppercase">{t("deck.activity.viewAll")}</button>
+                <button className="text-xs tracking-[0.2em] text-muted-foreground hover:deck-accent transition-colors uppercase">{t("deck.activity.viewAll")}</button>
               </div>
               <div className="border-t border-border">
                 {ACTIVITIES.map((activity, i) => (
@@ -276,9 +286,9 @@ function App() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <GitBranch className="size-3.5 text-muted-foreground" strokeWidth={1.5} />
-                  <h2 className="text-[10px] tracking-[0.3em] text-muted-foreground uppercase">{t("deck.services.title")}</h2>
+                  <h2 className="text-xs tracking-[0.3em] text-muted-foreground uppercase">{t("deck.services.title")}</h2>
                 </div>
-                <span className="text-[10px] font-mono text-muted-foreground">{t("deck.services.summary")}</span>
+                <span className="text-xs font-mono text-muted-foreground">{t("deck.services.summary")}</span>
               </div>
               <div className="border-t border-border">
                 {SERVICES.map((service, i) => (
@@ -289,7 +299,7 @@ function App() {
           </section>
 
           {/* Footer */}
-          <footer className="mt-20 pt-8 border-t border-border flex items-center justify-between text-[10px] text-muted-foreground tracking-[0.2em] uppercase deck-fade" style={{ animationDelay: "1200ms" }}>
+          <footer className="mt-20 pt-8 border-t border-border flex items-center justify-between text-xs text-muted-foreground tracking-[0.2em] uppercase deck-fade" style={{ animationDelay: "1200ms" }}>
             <span>{t("deck.footer.name")}</span>
             <div className="flex items-center gap-6 font-mono normal-case tracking-normal">
               <span>{t("deck.footer.hint")}</span>

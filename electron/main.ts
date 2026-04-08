@@ -2,6 +2,7 @@ import "./core/logger"
 import { app } from "electron"
 import { setupLog } from "./features/log/ipc"
 import { setupCSP } from "./core/security"
+import { setupAppMenu } from "./core/menu"
 import { setupChrome } from "./features/chrome/ipc"
 import { setupUpdater } from "./features/updater/ipc"
 import { createMainWindow } from "./core/window"
@@ -35,6 +36,9 @@ setupAppLifecycle()
 app.whenReady().then(() => {
   // CSP 必须在创建窗口前设置，否则首次加载不会应用策略
   setupCSP()
+
+  // 接管 application menu，避免 Electron 默认菜单触发的 NSMenu noise log
+  setupAppMenu()
 
   // 先创建主窗口，因为 setupChrome 需要绑定窗口的 maximize 事件
   createMainWindow()

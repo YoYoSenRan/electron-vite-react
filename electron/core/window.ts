@@ -64,8 +64,8 @@ export function clearMainWindow(): void {
  * - resized/moved: 持久化窗口尺寸
  * - setWindowOpenHandler: 外链用系统浏览器打开
  *
- * 注意：window feature 特有的 maximize/unmaximize 事件推送
- * 由 features/window 自己绑定，core 不引用任何 feature 通道常量。
+ * 注意：chrome feature 特有的 maximize/unmaximize 事件推送
+ * 由 features/chrome 自己绑定，core 不引用任何 feature 通道常量。
  */
 function bindWindowEvents(win: BrowserWindow): void {
   const saveBounds = () => {

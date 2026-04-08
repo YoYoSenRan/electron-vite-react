@@ -2,7 +2,7 @@ import "./core/logger"
 import { app } from "electron"
 import { setupLog } from "./features/log/ipc"
 import { setupCSP } from "./core/security"
-import { setupWindow } from "./features/window/ipc"
+import { setupChrome } from "./features/chrome/ipc"
 import { setupUpdater } from "./features/updater/ipc"
 import { createMainWindow } from "./core/window"
 import { setupDeeplinkListeners } from "./features/deeplink/ipc"
@@ -36,12 +36,12 @@ app.whenReady().then(() => {
   // CSP 必须在创建窗口前设置，否则首次加载不会应用策略
   setupCSP()
 
-  // 先创建主窗口，因为 setupWindow 需要绑定窗口的 maximize 事件
+  // 先创建主窗口，因为 setupChrome 需要绑定窗口的 maximize 事件
   createMainWindow()
 
   // IPC handler 一次性注册，避免每次创建窗口都重复注册
   // 全部在 loadURL 完成前同步执行，渲染进程首次调用时 handler 一定已就绪
-  setupWindow()
+  setupChrome()
   setupUpdater()
   setupLog()
 

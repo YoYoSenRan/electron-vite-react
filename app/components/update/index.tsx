@@ -18,12 +18,12 @@ const Update = () => {
     onOk?: () => void
   }>({
     onCancel: () => setModalOpen(false),
-    onOk: () => window.api.updater.startDownload(),
+    onOk: () => window.electron.updater.startDownload(),
   })
 
   const checkUpdate = async () => {
     setChecking(true)
-    const result = await window.api.updater.check()
+    const result = await window.electron.updater.check()
     setProgressInfo({ percent: 0 })
     setChecking(false)
     setModalOpen(true)
@@ -44,7 +44,7 @@ const Update = () => {
         ...state,
         cancelText: "Cancel",
         okText: "Update",
-        onOk: () => window.api.updater.startDownload(),
+        onOk: () => window.electron.updater.startDownload(),
       }))
       setUpdateAvailable(true)
     } else {
@@ -67,17 +67,17 @@ const Update = () => {
       ...state,
       cancelText: "Later",
       okText: "Install now",
-      onOk: () => window.api.updater.quitAndInstall(),
+      onOk: () => window.electron.updater.quitAndInstall(),
     }))
   }, [])
 
   useEffect(() => {
     // 每个订阅都返回取消函数，组件卸载时统一清理
     const unsubscribers = [
-      window.api.updater.onCanAvailable(onUpdateCanAvailable),
-      window.api.updater.onError(onUpdateError),
-      window.api.updater.onDownloadProgress(onDownloadProgress),
-      window.api.updater.onDownloaded(onUpdateDownloaded),
+      window.electron.updater.onCanAvailable(onUpdateCanAvailable),
+      window.electron.updater.onError(onUpdateError),
+      window.electron.updater.onDownloadProgress(onDownloadProgress),
+      window.electron.updater.onDownloaded(onUpdateDownloaded),
     ]
 
     return () => {

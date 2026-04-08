@@ -10,10 +10,10 @@ export function TitleBar() {
 
   useEffect(() => {
     // 初始化时查询当前最大化状态
-    window.api.window.isMaximized().then(setIsMaximized)
+    window.electron.chrome.isMaximized().then(setIsMaximized)
 
     // 监听主进程推送的最大化状态变化，组件卸载时自动取消订阅
-    const unsubscribe = window.api.window.onMaximizedChange(setIsMaximized)
+    const unsubscribe = window.electron.chrome.onMaximizedChange(setIsMaximized)
     return unsubscribe
   }, [])
 
@@ -27,14 +27,14 @@ export function TitleBar() {
       {!isMac && (
         // no-drag: 按钮区域不参与拖拽，否则点击事件会被吞掉
         <div className="titlebar-controls" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
-          <button className="titlebar-btn" onClick={() => window.api.window.minimize()} aria-label="最小化">
+          <button className="titlebar-btn" onClick={() => window.electron.chrome.minimize()} aria-label="最小化">
             <Minus size={14} />
           </button>
-          <button className="titlebar-btn" onClick={() => window.api.window.maximize()} aria-label={isMaximized ? "还原" : "最大化"}>
+          <button className="titlebar-btn" onClick={() => window.electron.chrome.maximize()} aria-label={isMaximized ? "还原" : "最大化"}>
             {/* 最大化状态显示还原图标（重叠矩形），否则显示单个矩形 */}
             {isMaximized ? <Copy size={12} /> : <Square size={12} />}
           </button>
-          <button className="titlebar-btn titlebar-btn-close" onClick={() => window.api.window.close()} aria-label="关闭">
+          <button className="titlebar-btn titlebar-btn-close" onClick={() => window.electron.chrome.close()} aria-label="关闭">
             <X size={14} />
           </button>
         </div>

@@ -1,24 +1,24 @@
-import { windowChannels } from "./channels"
+import { chromeChannels } from "./channels"
 import { ipcMain, BrowserWindow } from "electron"
 import { getMainWindow } from "../../core/window"
 import { INDEX_HTML, PRELOAD_PATH, VITE_DEV_SERVER_URL } from "../../core/paths"
 
 /**
- * 注册 window feature 的所有 IPC handler 和主窗口事件。
+ * 注册 chrome feature 的所有 IPC handler 和主窗口事件。
  * 必须在 app.whenReady() 之后 **且主窗口已创建** 之后调用。
  */
-export function setupWindow(): void {
+export function setupChrome(): void {
   registerHandlers()
   bindMaximizeEvents()
 }
 
 /** 注册所有 ipcMain.handle，与窗口实例无关。 */
 function registerHandlers(): void {
-  ipcMain.handle(windowChannels.minimize, () => {
+  ipcMain.handle(chromeChannels.minimize, () => {
     getMainWindow()?.minimize()
   })
 
-  ipcMain.handle(windowChannels.maximize, () => {
+  ipcMain.handle(chromeChannels.maximize, () => {
     const win = getMainWindow()
     if (!win) return
     // 切换最大化/还原
@@ -29,15 +29,15 @@ function registerHandlers(): void {
     }
   })
 
-  ipcMain.handle(windowChannels.close, () => {
+  ipcMain.handle(chromeChannels.close, () => {
     getMainWindow()?.close()
   })
 
-  ipcMain.handle(windowChannels.isMaximized, () => {
+  ipcMain.handle(chromeChannels.isMaximized, () => {
     return getMainWindow()?.isMaximized() ?? false
   })
 
-  ipcMain.handle(windowChannels.openWin, (_event, targetPath: string) => {
+  ipcMain.handle(chromeChannels.openWin, (_event, targetPath: string) => {
     openChildWindow(targetPath)
   })
 }
@@ -49,14 +49,14 @@ function registerHandlers(): void {
 function bindMaximizeEvents(): void {
   const win = getMainWindow()
   if (!win) {
-    throw new Error("[window] bindMaximizeEvents 必须在主窗口创建之后调用")
+    throw new Error("[chrome] bindMaximizeEvents 必须在主窗口创建之后调用")
   }
 
   win.on("maximize", () => {
-    win.webContents.send(windowChannels.maximizedChanged, true)
+    win.webContents.send(chromeChannels.maximizedChanged, true)
   })
   win.on("unmaximize", () => {
-    win.webContents.send(windowChannels.maximizedChanged, false)
+    win.webContents.send(chromeChannels.maximizedChanged, false)
   })
 }
 

@@ -1,4 +1,4 @@
-export interface WindowBridge {
+export interface ChromeBridge {
   minimize: () => Promise<void>
   maximize: () => Promise<void>
   close: () => Promise<void>

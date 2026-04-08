@@ -14,14 +14,13 @@ paths:
 app/
 ├── main.tsx                # 入口：i18n + theme 首帧 apply + 挂载 <App />
 ├── App.tsx                 # 路由壳：TitleBar + <Routes>，不写业务
-├── App.css                 # 全局 utility（deck-* 动画/颜色）
 ├── pages/                  # 路由页面，一个路由一个目录
 ├── components/             # 跨页复用组件 + ui/（shadcn）
 ├── hooks/                  # 跨页复用的副作用 hook
 ├── stores/                 # zustand store（详见 persistence.md）
 ├── i18n/                   # 翻译（详见 i18n.md）
 ├── lib/                    # 通用工具函数（无 React 依赖）
-├── styles/                 # 全局样式入口（globals.css / Tailwind）
+├── styles/                 # 全部全局样式（分层：index.css 入口 → tokens.css 变量 → base.css 元素 reset → app.css 自定义 class）
 └── types/                  # 全局类型 + auto-imports.d.ts
 ```
 

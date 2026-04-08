@@ -25,7 +25,7 @@ paths:
 | Sans body | Roboto Variable | `font-sans`（默认） |
 | Mono data | 系统等宽栈 | `font-mono` |
 
-CSS 变量定义在 `app/styles/globals.css`：
+CSS 变量定义在 `app/styles/tokens.css`：
 
 ```css
 --font-sans: "Roboto Variable", sans-serif;
@@ -47,7 +47,7 @@ CSS 变量定义在 `app/styles/globals.css`：
 
 ### 单一强调色（自定义）
 
-定义在 `app/App.css` 的 `--deck-accent`，深浅模式各调一档亮度：
+定义在 `app/styles/tokens.css` 的 `--deck-accent`（和 shadcn token 同处），深浅模式各调一档亮度：
 
 ```css
 :root  { --deck-accent: oklch(0.7 0.16 55); }
@@ -99,7 +99,7 @@ CSS 变量定义在 `app/styles/globals.css`：
 
 ## 动画系统
 
-定义在 `app/App.css`：
+定义在 `app/styles/app.css`：
 
 | Class | 用途 | 配置 |
 |---|---|---|
@@ -231,7 +231,7 @@ CSS 变量定义在 `app/styles/globals.css`：
 
 ## 当前可用的自定义 utility class
 
-定义在 `app/App.css`：
+定义在 `app/styles/app.css`：
 
 | Class | 作用 |
 |---|---|

@@ -171,7 +171,7 @@ export default function Demo() {
   const { t } = useTranslation()
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden" style={{ paddingTop: 32 }}>
+    <div className="bg-background text-foreground">
       {/* ===== Header bar ===== */}
       <header className="relative flex items-center justify-between border-b border-border px-10 py-5 deck-fade">
         <div className="flex items-center gap-6">
